@@ -35,7 +35,7 @@ else:
 
 mt_soup =  BeautifulSoup(mt_html, "lxml")
 mt_fulltable = mt_soup.find("table",{"class" : "torrents"})
-td_th = re.compile('t[dh]')
+#td_th = re.compile('t[dh]')
 
 mt_torrents = []
 for row in mt_fulltable.find_all("tr",class_=['sticky_top','sticky_normal'],recursive=False):
@@ -44,19 +44,15 @@ for row in mt_fulltable.find_all("tr",class_=['sticky_top','sticky_normal'],recu
     torrent_table = row.find("table",{"class":"torrentname"})
     torrent_img = torrent_table.find("td",{"class":"torrentimg"}).a.find("img")['src']
     torrent_fix = torrent_table.find("td",{"class":"embedded"})
-    torrent_title = torrent_fix.a['title']
-    torrent_name = torrent_fix.find('br').nextSibling
-    torrent_id = re.search(r'\d+(?=&)', torrent_fix.a['href'] ).group()
+    title = torrent_fix.a['title']
+    try:
+        name = torrent_fix.find('br').nextSibling
+    except:
+        name = ''
+    id = re.search(r'\d+(?=&)', torrent_fix.a['href'] ).group()
 
-    per_torrent = [torrent_title,torrent_name,torrent_img,torrent_id,size]
-    #print per_torrent
+    per_torrent = ['MT',title,name,id,size]
     mt_torrents.extend([per_torrent])
-
-    #print torrent_title
-    #print torrent_name
-    #print torrent_img
-    #print torrent_id
-    #print size
 print mt_torrents
 
 
