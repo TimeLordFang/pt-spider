@@ -40,13 +40,12 @@ for row in hdc_fulltable.find_all("tr",class_=["stickz_bg","sticky_bg"],recursiv
     torrent_misc = torrent_fix.h3.a
     title = torrent_misc['title']
     id = re.search(r'\d+(?=&)',torrent_misc['href']).group()
-    name = torrent_fix.h4.text
+    try:
+        name = torrent_fix.h4.text
+    except:
+        name = ''
     size = row.find("td",{"class":"t_size"}).text
-    #print title
-    #print name
-    #print id
-    #print size
-    torrent = [title,name,id,size]
+    torrent = ['HDC',title,name,id,size]
     hdc_torrents.extend([torrent])
 
 
