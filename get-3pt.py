@@ -18,13 +18,34 @@ f.close()
 mt_url = 'https://tp.m-team.cc/torrents.php'
 ttg_url = 'https://totheglory.im/browse.php?c=M'
 hdc_url = 'https://hdchina.club/torrents.php'
-r1 = requests.get(url,headers=headers)
-r2 = urllib2.Request(url,headers=headers)
+
+def GetMT():
+    s = requests.Session()
+    s.hesders.update({'Cookie':mt_cookie})
+    r = requests.get(mt_url,headers=headers)
+    soup =  BeautifulSoup(r.content, "lxml")
+    fulltable = mt_soup.find("table",{"class" : "torrents"})
+    for row in mt_fulltable.find_all("tr",class_=['sticky_top','sticky_normal'],recursive=False):
+    	torrent_other = row.find_all("td",{"class":"rowfollow"})
+    	size = torrent_other[3].text
+    	torrent_table = row.find("table",{"class":"torrentname"})
+    	torrent_img = torrent_table.find("td",{"class":"torrentimg"}).a.find("img")['src']
+    	torrent_fix = torrent_table.find("td",{"class":"embedded"})
+    	title = torrent_fix.a['title']
+    	try:
+    	    name = torrent_fix.find('br').nextSibling
+    	except:
+    	    name = ''
+    	id = re.search(r'\d+(?=&)', torrent_fix.a['href'] ).group()
+
+    	per_torrent = ['MT',title,name,id,size]
+    	mt_torrents.extend([per_torrent])
+
+
+
+
 
 html1 = r1.content
-html2 = html = urllib2.urlopen(r2).read()
 
-print "html1:\n"
-print html1,"\n\n"
-print "html2:\n"
-print html2
+#r2 = urllib2.Request(url,headers=headers)
+#html2 = html = urllib2.urlopen(r2).read()
